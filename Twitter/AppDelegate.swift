@@ -12,12 +12,37 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var storyboard = UIStoryboard(name: "Main", bundle: nil)
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "userDidLogout", name: userDidLogoutNotification, object: nil)
+        
+        
+        if User.currentUser != nil {
+            println("user already logged in")
+            
+            var vc = storyboard.instantiateViewControllerWithIdentifier("MainNavigationController") as UINavigationController
+            window?.rootViewController = vc
+            
+            
+//            var vc = storyboard.instantiateViewControllerWithIdentifier("TweetsViewController") as TweetViewController
+//            window?.rootViewController = vc
+        }
+        
+        
         return true
     }
+    
+    func userDidLogout() {
+        var vc = storyboard.instantiateInitialViewController() as UIViewController
+        window?.rootViewController = vc
+        
+        
+    }
+    
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -41,6 +66,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        TwitterClient.sharedInstance.openUrl(url)
+        return true
+    }
+    
+    
 }
 
