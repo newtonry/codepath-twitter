@@ -9,12 +9,6 @@
 import UIKit
 
 
-//protocol NewTweetDelegate {
-////    func tweetSent(viewController: NewTweetViewController)
-//    
-//}
-
-
 class NewTweetViewController: UIViewController {
 
     @IBOutlet weak var userImage: UIImageView!

@@ -29,6 +29,7 @@
 		C5F3C8731A9A671500233D55 /* reply.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F3C86E1A9A671500233D55 /* reply.png */; };
 		C5F3C8741A9A671500233D55 /* retweet-default.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F3C86F1A9A671500233D55 /* retweet-default.png */; };
 		C5F3C8751A9A671500233D55 /* retweet-on.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F3C8701A9A671500233D55 /* retweet-on.png */; };
+		C5F3C8771A9A755000233D55 /* TweetActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F3C8761A9A755000233D55 /* TweetActionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 		C5F3C86E1A9A671500233D55 /* reply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reply.png; sourceTree = "<group>"; };
 		C5F3C86F1A9A671500233D55 /* retweet-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "retweet-default.png"; sourceTree = "<group>"; };
 		C5F3C8701A9A671500233D55 /* retweet-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "retweet-on.png"; sourceTree = "<group>"; };
+		C5F3C8761A9A755000233D55 /* TweetActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetActionView.swift; sourceTree = "<group>"; };
 		E56C96F5E863669EDCDB5CBA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -137,6 +139,7 @@
 				C55FB1F51A956AF2007BD9A2 /* ViewController.swift */,
 				C5F2B2D91A99296A0079673F /* NewTweetViewController.swift */,
 				C5F2B2CD1A9820FA0079673F /* TweetViewController.swift */,
+				C5F3C8761A9A755000233D55 /* TweetActionView.swift */,
 				C5F3C86A1A99492B00233D55 /* IndividualTweetViewController.swift */,
 				C5F2B2CF1A990FBE0079673F /* Cells */,
 				C57FC8161A956C4800A0AA33 /* API */,
@@ -358,6 +361,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5F3C8771A9A755000233D55 /* TweetActionView.swift in Sources */,
 				C56B3F9B1A96D3C500CD43D6 /* User.swift in Sources */,
 				C5F2B2DA1A99296A0079673F /* NewTweetViewController.swift in Sources */,
 				C5F2B2D11A990FCF0079673F /* TweetCell.swift in Sources */,

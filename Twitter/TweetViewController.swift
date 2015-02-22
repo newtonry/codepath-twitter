@@ -25,8 +25,9 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.tweetsArray = tweets
             self.tableView.reloadData()
         })
-        self.tableView.rowHeight = UITableViewAutomaticDimension
         
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 100
         self.tableView.addPullToRefreshWithActionHandler(refreshTweets)
         self.tableView.addInfiniteScrollingWithActionHandler(pullMoreTweetsHandler)
     }
@@ -96,11 +97,11 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.navigationController?.pushViewController(individualTweetViewController, animated: true)
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell") as TweetCell
-        let tweet = tweetsArray![indexPath.row]
-        cell.fillFromTweet(tweet)
-        cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-        return cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height + 1
-    }
+//    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell") as TweetCell
+//        let tweet = tweetsArray![indexPath.row]
+//        cell.fillFromTweet(tweet)
+//        cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+//        return cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height + 1
+//    }
 }

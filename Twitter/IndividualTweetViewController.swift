@@ -8,33 +8,26 @@
 
 import UIKit
 
-class IndividualTweetViewController: UIViewController {
+class IndividualTweetViewController: UIViewController, TweetActionDelegate {
     var tweet: Tweet?
     @IBOutlet weak var usernameLabel: UILabel!
-    
     @IBOutlet weak var handleLabel: UILabel!
-    
     @IBOutlet weak var retweetsCountLabel: UILabel!
-    
     @IBOutlet weak var favoritesCountLabel: UILabel!
-    
     @IBOutlet weak var thumbnailImageView: UIImageView!
-    
     @IBOutlet weak var tweetMessageLabel: UILabel!
-    
     @IBOutlet weak var timestampLabel: UILabel!
-    
+    @IBOutlet weak var actionView: TweetActionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let replyButton = UIBarButtonItem(title: "Reply", style: UIBarButtonItemStyle.Plain, target: self, action: "onReply")
         self.navigationItem.rightBarButtonItem = replyButton
-    
         
         if let tw = tweet {
             usernameLabel.text = tw.user!.name!
-            handleLabel.text = tw.user!.screenname!
+            handleLabel.text = "@\(tw.user!.screenname!)"
             favoritesCountLabel.text = "\(tw.favoriteCount!) favorited"
             retweetsCountLabel.text = "\(tw.retweetCount!) retweets"
             
@@ -42,50 +35,32 @@ class IndividualTweetViewController: UIViewController {
             thumbnailImageView.setImageWithURL(imageUrl)
             tweetMessageLabel.text = tw.text!
             timestampLabel.text = tw.createdAtString!
+            actionView.tweet = tw
         }
         
-        
-        
-        // Do any additional setup after loading the view.
+        actionView.delegate = self
     }
-
-//    func onReply() {
-//        let newTweetNavigationController = storyboard!.instantiateViewControllerWithIdentifier("NewTweetNavigationController") as UINavigationController
-//        self.presentViewController(newTweetNavigationController, animated: true, completion: nil)
-//        
-//        
-//    }
     
     
-    @IBAction func onReply(sender: AnyObject) {
+    func onReply(tweet: Tweet) {
         let newTweetNavigationController = storyboard!.instantiateViewControllerWithIdentifier("NewTweetNavigationController") as UINavigationController
-        
-        
         self.presentViewController(newTweetNavigationController, animated: true, completion: nil)
-        
-        
-        
     }
     
     
     
-    @IBAction func onRetweet(sender: AnyObject) {
-        TwitterClient.sharedInstance.retweetTweet(tweet!, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
+    func onRetweet(tweet: Tweet) {
+        TwitterClient.sharedInstance.retweetTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
             println("In retweet cb")
             }
         )
     }
     
-    
-    @IBAction func onFavorite(sender: AnyObject) {
-        
-        TwitterClient.sharedInstance.favoriteTweet(tweet!, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
+    func onFavorite(tweet: Tweet) {
+        TwitterClient.sharedInstance.favoriteTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
             println("In favorite cb")
             }
         )
-        
-        
-        
     }
     
     
@@ -94,15 +69,4 @@ class IndividualTweetViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

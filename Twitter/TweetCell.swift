@@ -9,14 +9,17 @@
 import UIKit
 
 class TweetCell: UITableViewCell {
-    @IBOutlet weak var tweetLabel: UILabel!
+//    @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var userLabel: UILabel!
+    @IBOutlet weak var tweetLabel: UILabel!
+    @IBOutlet weak var screennameLabel: UILabel!    
     @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var timeLabel: UILabel!
-
+    @IBOutlet weak var actionView: TweetActionView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        thumbnail.layer.cornerRadius = 4
+        thumbnail.clipsToBounds = true
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -30,8 +33,9 @@ class TweetCell: UITableViewCell {
         let thumbUrl = NSURL(string: tweet.user!.profileImageUrl!)
         tweetLabel.text = tweet.text
         userLabel.text = tweet.user!.name
+        screennameLabel.text = "@\(tweet.user!.screenname!)"
         thumbnail.setImageWithURL(thumbUrl)
-        
+        actionView.tweet = tweet
     }
     
 }
