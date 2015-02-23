@@ -19,6 +19,8 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.barTintColor = UIColor(red: 0.333, green: 0.675, blue: 0.933, alpha: 1.0)
+
         fillUserDetails()
         User.currentUser?.profileImageUrl
         tweetTextView.becomeFirstResponder()

@@ -16,9 +16,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tm4-pT-bdV">
-                                <rect key="frame" x="100" y="145" width="121" height="30"/>
-                                <state key="normal" title="Login with Twitter">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tm4-pT-bdV">
+                                <rect key="frame" x="136" y="303" width="49" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Login">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -26,8 +27,17 @@
                                     <action selector="onLogin:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PTG-wI-HH9"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Twitter_logo_blue.png" translatesAutoresizingMaskIntoConstraints="NO" id="hBg-7X-jsL">
+                                <rect key="frame" x="35" y="50" width="250" height="203"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.33333334329999997" green="0.67450982329999998" blue="0.93333339689999995" alpha="1" colorSpace="deviceRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="tm4-pT-bdV" secondAttribute="centerX" id="IyG-05-cIQ"/>
+                            <constraint firstItem="hBg-7X-jsL" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="50" id="RnX-9H-FMT"/>
+                            <constraint firstItem="tm4-pT-bdV" firstAttribute="top" secondItem="hBg-7X-jsL" secondAttribute="bottom" constant="50" id="cMi-QI-Xc3"/>
+                            <constraint firstAttribute="centerX" secondItem="hBg-7X-jsL" secondAttribute="centerX" id="msk-k5-yzG"/>
+                        </constraints>
                     </view>
                     <connections>
                         <segue destination="Adb-mw-OJJ" kind="modal" identifier="loginSegue" id="GxT-4Q-ENz"/>
@@ -35,7 +45,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="74.666666666666671" y="385.29333333333335"/>
+            <point key="canvasLocation" x="78" y="413"/>
         </scene>
         <!--Tweet View Controller-->
         <scene sceneID="S7G-wa-cQr">
@@ -491,6 +501,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Twitter_logo_blue.png" width="250" height="203"/>
         <image name="favorite.png" width="16" height="16"/>
         <image name="reply.png" width="16" height="16"/>
         <image name="retweet-default.png" width="19" height="16"/>
@@ -500,4 +511,5 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
 </document>

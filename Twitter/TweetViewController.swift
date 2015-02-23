@@ -21,6 +21,8 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        navigationController?.navigationBar.barTintColor = UIColor(red: 0.333, green: 0.675, blue: 0.933, alpha: 1.0)
         
         TwitterClient.sharedInstance.homeTimelineWithCompletion(nil, completion: { (tweets, error) -> Void in
             self.tweetsArray = tweets

@@ -21,6 +21,8 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        navigationController?.navigationBar.barTintColor = UIColor(red: 0.333, green: 0.675, blue: 0.933, alpha: 1.0)
         
         if let tw = tweet {
             usernameLabel.text = tw.user!.name!
@@ -41,7 +43,7 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
         
         actionView.delegate = self
     }
-        
+    
     func onReply(tweet: Tweet) {
         let newTweetNavigationController = storyboard!.instantiateViewControllerWithIdentifier("NewTweetNavigationController") as UINavigationController
         self.presentViewController(newTweetNavigationController, animated: true, completion: nil)
@@ -49,14 +51,25 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
     }
     
     func onRetweet(tweet: Tweet) {
+
+        
         TwitterClient.sharedInstance.retweetTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
-            println("In retweet cb")
+            if let res = response {
+                self.tweet = tweet
+                self.tweet!.retweetCount = self.tweet!.retweetCount! + 1
+                self.retweetsCountLabel.text = "\(self.tweet!.retweetCount!) retweets"
+            }
             }
         )
     }
+    
     func onFavorite(tweet: Tweet) {
         TwitterClient.sharedInstance.favoriteTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
-            println("In favorite cb")
+            if let res = response {
+                self.tweet = tweet
+                self.tweet!.favoriteCount = self.tweet!.favoriteCount! + 1
+                self.favoritesCountLabel.text = "\(self.tweet!.favoriteCount!) favorited"
+            }
             }
         )
     }
