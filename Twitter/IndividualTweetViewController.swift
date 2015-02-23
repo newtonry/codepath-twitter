@@ -41,13 +41,11 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
         
         actionView.delegate = self
     }
-    
-    
+        
     func onReply(tweet: Tweet) {
         let newTweetNavigationController = storyboard!.instantiateViewControllerWithIdentifier("NewTweetNavigationController") as UINavigationController
         self.presentViewController(newTweetNavigationController, animated: true, completion: nil)
 
-    
     }
     
     func onRetweet(tweet: Tweet) {

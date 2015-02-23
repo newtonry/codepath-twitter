@@ -22,39 +22,41 @@ class TweetActionView: UIView {
     
     var tweet: Tweet?
     var delegate: TweetActionDelegate?
-
     
     // Seems like this should just run on load or something
     func setButtons() {
         if tweet!.retweeted! {
             let image = UIImage(named: "retweet-on.png")
             retweetButton.setImage(image, forState: .Normal)
+//            retweetButton.enabled = false
+        } else {
+            let image = UIImage(named: "retweet-default.png")
+            retweetButton.setImage(image, forState: .Normal)
         }
         
         if tweet!.favorited! {
             let image = UIImage(named: "favorite_on.png")
             favoriteButton.setImage(image, forState: .Normal)
+//            favoriteButton.enabled = false
+        } else {
+            let image = UIImage(named: "favorite.png")
+            favoriteButton.setImage(image, forState: .Normal)
         }
-        
-        println("esetup")
     }
-    
     
     @IBAction func onReply(sender: AnyObject) {
         self.delegate?.onReply(tweet!)
     }
     
     @IBAction func onRetweet(sender: AnyObject) {
-        let image = UIImage(named: "retweet-on.png")
-        retweetButton.setImage(image, forState: .Normal)
+        tweet!.retweeted = true
+        setButtons()
         self.delegate?.onRetweet(tweet!)
-    
     }
 
     @IBAction func onFavorite(sender: AnyObject) {
-        let image = UIImage(named: "favorite_on.png")
-        favoriteButton.setImage(image, forState: .Normal)
+        tweet!.favorited = true
+        setButtons()
         self.delegate?.onFavorite(tweet!)
-    
     }
 }
