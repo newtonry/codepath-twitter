@@ -14,16 +14,13 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
     @IBOutlet weak var handleLabel: UILabel!
     @IBOutlet weak var retweetsCountLabel: UILabel!
     @IBOutlet weak var favoritesCountLabel: UILabel!
-    @IBOutlet weak var thumbnailImageView: UIImageView!
+    @IBOutlet weak var thumbnailImageView: Thumbnail!
     @IBOutlet weak var tweetMessageLabel: UILabel!
     @IBOutlet weak var timestampLabel: UILabel!
     @IBOutlet weak var actionView: TweetActionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let replyButton = UIBarButtonItem(title: "Reply", style: UIBarButtonItemStyle.Plain, target: self, action: "onReply")
-        self.navigationItem.rightBarButtonItem = replyButton
         
         if let tw = tweet {
             usernameLabel.text = tw.user!.name!
@@ -34,8 +31,12 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
             let imageUrl = NSURL(string: tw.user!.profileImageUrl!)
             thumbnailImageView.setImageWithURL(imageUrl)
             tweetMessageLabel.text = tw.text!
-            timestampLabel.text = tw.createdAtString!
+
+            var dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "MMM d"
+            timestampLabel.text = "\(dateFormatter.stringFromDate(tw.createdAt!))"
             actionView.tweet = tw
+            actionView.setButtons()
         }
         
         actionView.delegate = self
@@ -45,9 +46,9 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
     func onReply(tweet: Tweet) {
         let newTweetNavigationController = storyboard!.instantiateViewControllerWithIdentifier("NewTweetNavigationController") as UINavigationController
         self.presentViewController(newTweetNavigationController, animated: true, completion: nil)
+
+    
     }
-    
-    
     
     func onRetweet(tweet: Tweet) {
         TwitterClient.sharedInstance.retweetTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
@@ -55,7 +56,6 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
             }
         )
     }
-    
     func onFavorite(tweet: Tweet) {
         TwitterClient.sharedInstance.favoriteTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
             println("In favorite cb")
@@ -63,10 +63,8 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
         )
     }
     
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }

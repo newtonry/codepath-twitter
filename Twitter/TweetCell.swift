@@ -9,17 +9,15 @@
 import UIKit
 
 class TweetCell: UITableViewCell {
-//    @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var tweetLabel: UILabel!
     @IBOutlet weak var screennameLabel: UILabel!    
-    @IBOutlet weak var thumbnail: UIImageView!
+    @IBOutlet weak var thumbnail: Thumbnail!
     @IBOutlet weak var actionView: TweetActionView!
+    @IBOutlet weak var createdAtLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        thumbnail.layer.cornerRadius = 4
-        thumbnail.clipsToBounds = true
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -27,7 +25,6 @@ class TweetCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
     
     func fillFromTweet(tweet: Tweet) {
         let thumbUrl = NSURL(string: tweet.user!.profileImageUrl!)
@@ -36,6 +33,11 @@ class TweetCell: UITableViewCell {
         screennameLabel.text = "@\(tweet.user!.screenname!)"
         thumbnail.setImageWithURL(thumbUrl)
         actionView.tweet = tweet
-    }
     
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MMM d"
+        self.createdAtLabel.text = "\(dateFormatter.stringFromDate(tweet.createdAt!))"
+    
+        
+    }
 }

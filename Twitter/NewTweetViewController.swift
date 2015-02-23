@@ -9,26 +9,21 @@
 import UIKit
 
 
-class NewTweetViewController: UIViewController {
+class NewTweetViewController: UIViewController, UITextViewDelegate {
 
-    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var userImage: Thumbnail!
     @IBOutlet weak var userName: UILabel!
-    @IBOutlet weak var userHandle: UILabel!
     @IBOutlet weak var tweetTextView: UITextView!
-    
+    @IBOutlet weak var remainingLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         fillUserDetails()
-        
-        
         User.currentUser?.profileImageUrl
-        
         tweetTextView.becomeFirstResponder()
-        
-
-        // Do any additional setup after loading the view.
+        remainingLabel.text = "\(lettersLeft()) remaining"
+        self.tweetTextView.delegate = self
     }
 
     func fillUserDetails() {
@@ -37,9 +32,6 @@ class NewTweetViewController: UIViewController {
         userImage.setImageWithURL(userImageUrl)
         
         userName.text = user.name!
-//        userHandle.text = user.screenname!
-        
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -55,23 +47,22 @@ class NewTweetViewController: UIViewController {
     @IBAction func onTweet(sender: AnyObject) {
         let message = tweetTextView.text
         let params = ["status": message]
-        
-       
-        
-        
-        TwitterClient.sharedInstance.postTweet(params, completion: {(response: AFHTTPRequestOperation?, error: NSError?) -> Void in
-            
 
-            
+        TwitterClient.sharedInstance.postTweet(params, completion: {(response: AFHTTPRequestOperation?, error: NSError?) -> Void in
                 self.dismissViewControllerAnimated(true, completion: nil)
-            
-            
-            
             }
         )
-        
-        
-        
     }
 
+    func textViewDidChange(textView: UITextView) {
+        remainingLabel.text = "\(lettersLeft()) remaining"
+    }
+
+    func lettersLeft() -> Int {
+        let text = tweetTextView.text as NSString
+        return 140 - text.length
+    }
+    
+    
+    
 }

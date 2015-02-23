@@ -17,9 +17,10 @@ class Tweet: NSObject {
     var dictionary: NSDictionary
     var favoriteCount: NSInteger?
     var retweetCount: NSInteger?
+    var favorited: Bool?
+    var retweeted: Bool?
     
     
-//    var userImageUrl: NSURL?
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary
@@ -27,27 +28,27 @@ class Tweet: NSObject {
         user = User(dictionary: dictionary["user"] as NSDictionary)
         text = dictionary["text"] as? String
         createdAtString = dictionary["created_at"] as? String
-        
-//        userImageUrl = NSURL(user?.profileImageUrl)
-        
         favoriteCount = dictionary["favorite_count"] as? NSInteger
         retweetCount = dictionary["retweet_count"] as? NSInteger
+        favorited = dictionary["favorited"] as? Bool
+        retweeted = dictionary["retweeted"] as? Bool
+
         var formatter = NSDateFormatter()
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
         createdAt = formatter.dateFromString(createdAtString!)
+        
+    
     }
     
     class func tweetsFromArray(array: [NSDictionary]) -> [Tweet] {
         var tweets = [Tweet]()
-        
-        
-        
         for tweetDict in array {
             tweets.append(Tweet(dictionary: tweetDict))
         }
-        
         return tweets        
     }
+    
+    
     
     
     

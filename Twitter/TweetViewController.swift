@@ -8,10 +8,11 @@
 
 import UIKit
 
-class TweetViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TweetViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TweetActionDelegate {
     
     var tweetsArray: [Tweet]?
     @IBOutlet weak var tableView: UITableView!
+//    @IBOutlet weak var actionView: TweetActionView!
     
     @IBAction func onLogout(sender: AnyObject) {
         User.currentUser?.logout()
@@ -31,7 +32,7 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.tableView.addPullToRefreshWithActionHandler(refreshTweets)
         self.tableView.addInfiniteScrollingWithActionHandler(pullMoreTweetsHandler)
     }
-
+    
     func refreshTweets() {
         let lastTweet = tweetsArray![0]
         let params = ["since_id": lastTweet.id!]
@@ -80,6 +81,8 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell") as TweetCell
         let tweet = tweetsArray![indexPath.row]
         cell.fillFromTweet(tweet)
+        cell.actionView.delegate = self  // I think this is an awful pattern, I regret doing this!
+        cell.actionView.setButtons()
         return cell
     }
     
@@ -96,6 +99,30 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         individualTweetViewController.tweet = tweet
         self.navigationController?.pushViewController(individualTweetViewController, animated: true)
     }
+
+
+    func onReply(tweet: Tweet) {
+        let newTweetNavigationController = storyboard!.instantiateViewControllerWithIdentifier("NewTweetNavigationController") as UINavigationController
+        self.presentViewController(newTweetNavigationController, animated: true, completion: nil)
+    }
+    
+    
+    
+    func onRetweet(tweet: Tweet) {
+        TwitterClient.sharedInstance.retweetTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
+            println("In retweet cb")
+            }
+        )
+    }
+    
+    func onFavorite(tweet: Tweet) {
+        TwitterClient.sharedInstance.favoriteTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
+            println("In favorite cb")
+            }
+        )
+    }
+
+    
     
 //    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell") as TweetCell
