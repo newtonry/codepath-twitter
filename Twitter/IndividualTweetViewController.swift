@@ -51,8 +51,6 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
     }
     
     func onRetweet(tweet: Tweet) {
-
-        
         TwitterClient.sharedInstance.retweetTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
             if let res = response {
                 self.tweet = tweet

@@ -11,6 +11,11 @@ let TWITTER_CONSUMER_KEY = "Z9apaPrYR44YSG9xZiSRkcMj6"
 let TWITTER_CONSUMER_SECRET = "GZz7HnUhhjhYk6UnVe14ijRyZ17h2a0BwDomI7l3n9IpAk0qW7"
 let TWITTER_BASE_URL = NSURL(string: "https://api.twitter.com")
 
+let statusEndpoint = "1.1/statuses/update.json"
+let favoriteEndpoint = "1.1/favorites/create.json"
+let homeTimelineEndpoint = "1.1/statuses/home_timeline.json"
+let retweetEndpoint = "1.1/statuses/retweet/"
+let oauthEndpoint = "https://api.twitter.com/oauth/authorize?oauth_token="
 
 
 class TwitterClient: BDBOAuth1RequestOperationManager {
@@ -30,12 +35,11 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     func loginWithCompletion(completion: (user: User?, error: NSError?) -> ()) {
         loginCompletion = completion
         
-        
         // Fetch request token and redirect to authorization
         TwitterClient.sharedInstance.requestSerializer.removeAccessToken()
         TwitterClient.sharedInstance.fetchRequestTokenWithPath("oauth/request_token", method: "GET", callbackURL: NSURL(string: "cptwitterdemo://oauth"), scope: nil, success: { (requestToken: BDBOAuth1Credential!) -> Void in
             
-            var authURL = NSURL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")
+            var authURL = NSURL(string: "\(oauthEndpoint)\(requestToken.token)")
             UIApplication.sharedApplication().openURL(authURL!)
             }, failure: {(error: NSError!) -> Void in
                 self.loginCompletion!(user: nil, error: error)
@@ -70,7 +74,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     }
     
     func homeTimelineWithCompletion(params: NSDictionary?, completion: (tweets:[Tweet]?, error: NSError?) -> ()) {
-        GET("1.1/statuses/home_timeline.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+        GET(homeTimelineEndpoint, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             var tweets = Tweet.tweetsFromArray(response as [NSDictionary])
             completion(tweets: tweets, error: nil)
             }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
@@ -80,43 +84,30 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         )
     }
 
+    func postTweetWithStatus(status: NSString!, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {
+        let params = ["status": status]
+        postToEnpointWithParams(statusEndpoint, params: params, completion: completion)
+    }
     
     func favoriteTweet(tweet: Tweet, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {
         let params = ["id": tweet.id!]
-        postToEnpointWithParams("1.1/favorites/create.json", params: params, completion: completion)
+        postToEnpointWithParams(favoriteEndpoint, params: params, completion: completion)
     }
     
     func retweetTweet(tweet: Tweet, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {
-        
-        
-        let endpoint = "1.1/statuses/retweet/\(tweet.id!).json"
-
-        
-        
-        //        let params = ["id": tweet.id!]
-        
-        
+        let endpoint = "\(retweetEndpoint)\(tweet.id!).json"
         postToEnpointWithParams(endpoint, params: nil, completion: completion)
         
     }
-    
     
     func postToEnpointWithParams(endpoint: NSString, params: NSDictionary?, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {
         POST(endpoint, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             println("The POST to \(endpoint) a success!")
             completion(response: operation, error: nil)
-            
             }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
-//                println(operation)
                 println("The POST to \(endpoint) failed. \(error.localizedDescription)")
                 completion(response: nil, error: error)
-            
             }
         )
-    }
-    
-    
-    func postTweet(params: NSDictionary?, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {
-        postToEnpointWithParams("1.1/statuses/update.json", params: params, completion: completion)
     }
 }

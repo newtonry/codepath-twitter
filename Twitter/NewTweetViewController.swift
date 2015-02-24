@@ -32,7 +32,6 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         let user = User.currentUser!
         let userImageUrl = NSURL(string: user.profileImageUrl!)
         userImage.setImageWithURL(userImageUrl)
-        
         userName.text = user.name!
     }
     
@@ -47,10 +46,8 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     
     
     @IBAction func onTweet(sender: AnyObject) {
-        let message = tweetTextView.text
-        let params = ["status": message]
-
-        TwitterClient.sharedInstance.postTweet(params, completion: {(response: AFHTTPRequestOperation?, error: NSError?) -> Void in
+        let status = tweetTextView.text
+        TwitterClient.sharedInstance.postTweetWithStatus(status, completion: {(response: AFHTTPRequestOperation?, error: NSError?) -> Void in
                 self.dismissViewControllerAnimated(true, completion: nil)
             }
         )
@@ -64,7 +61,4 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         let text = tweetTextView.text as NSString
         return 140 - text.length
     }
-    
-    
-    
 }
