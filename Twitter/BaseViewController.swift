@@ -44,7 +44,7 @@ class BaseViewController: UIViewController {
         let isPanningRight = sender.velocityInView(view).x < -500
         
         if isPanningRight {
-            UIView.animateWithDuration(0.2, animations: {
+            UIView.animateWithDuration(0.15, animations: {
                 self.menuViewController!.view.frame = self.menuViewController!.originalFrame!
             })
         }
@@ -55,7 +55,7 @@ class BaseViewController: UIViewController {
 
         if isPanningLeft {
             menuViewController!.view.alpha = 1
-            UIView.animateWithDuration(0.2, animations: {
+            UIView.animateWithDuration(0.15, animations: {
                 self.menuViewController!.view.frame = self.menuViewController!.visibleFrame!
             })
         }

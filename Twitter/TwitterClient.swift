@@ -18,6 +18,8 @@ let retweetEndpoint = "1.1/statuses/retweet/"
 let oauthEndpoint = "https://api.twitter.com/oauth/authorize?oauth_token="
 let mentionsTimelineEndpoint = "/1.1/statuses/mentions_timeline.json"
 
+let userTweetsEndpoint = "/1.1/statuses/user_timeline.json"
+
 
 class TwitterClient: BDBOAuth1RequestOperationManager {
     
@@ -84,6 +86,19 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         )
     }
 
+    func userTweetsWithCompletion(user: User, completion: (tweets:[Tweet]?, error: NSError?) -> ()) {
+        let params = ["user_id": user.id!]
+        
+        GET(userTweetsEndpoint, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            var tweets = Tweet.tweetsFromArray(response as [NSDictionary])
+            completion(tweets: tweets, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                completion(tweets: nil, error: error)
+                println(error.localizedDescription)
+            }
+        )
+    }
+    
     func mentionsTimelineEndpointWithCompletion(params: NSDictionary?, completion: (tweets:[Tweet]?, error: NSError?) -> ()) {
         GET(mentionsTimelineEndpoint, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
 

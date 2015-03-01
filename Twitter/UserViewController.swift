@@ -8,18 +8,29 @@
 
 import UIKit
 
-class UserViewController: BaseViewController {
+class UserViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var headerBackgroundImage: UIImageView!
     @IBOutlet weak var userImage: UIImageView!
     
     @IBOutlet weak var followersCount: UILabel!
     @IBOutlet weak var followingCount: UILabel!
     @IBOutlet weak var tweetCount: UILabel!
+
     
-//    private var startingPoint:
-    private var usingGesture = false
+    @IBOutlet weak var statsView: UIView!
+    @IBOutlet weak var profileHeaderView: UIView!
+    
     private var bannerStartFrame: CGRect?
-    private var originalBannerImage: UIImage?
+//    private var originalBannerImage: UIImage?
+    
+    
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    var tweets: [Tweet]?
+    
+    private var panStartY: CGFloat?
+    
     
     var user: User?
     
@@ -30,21 +41,35 @@ class UserViewController: BaseViewController {
             if (backgroundUrl != nil) {
                 self.headerBackgroundImage.setImageWithURL(backgroundUrl!)
             }
+            
+            
             self.userImage.setImageWithURL(self.user?.profileImageHigh!)
             self.bannerStartFrame = self.headerBackgroundImage.frame
-            self.originalBannerImage = self.headerBackgroundImage!.image
+        })
+
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None;
+        
+        TwitterClient.sharedInstance.userTweetsWithCompletion(user!, completion: { (tweets, error) -> Void in
+            self.tweets = tweets
+            self.tableView.reloadData()
         })
 
         userImage.layer.cornerRadius = 6
+
         userImage.clipsToBounds = true
         
-        
+        profileHeaderView.clipsToBounds = true
+        headerBackgroundImage.clipsToBounds = true
+
         self.followingCount.text = "\(user!.followingCount!)"
         self.followersCount.text = "\(user!.followersCount!)"
         self.tweetCount.text = "\(user!.tweetCount!)"
         
         setupPullRecognizer()
-
     }
 
     func setupPullRecognizer() {
@@ -53,94 +78,55 @@ class UserViewController: BaseViewController {
     }
     
     func beingPulled(sender: UIPanGestureRecognizer) {
-        let isPullingDown = sender.velocityInView(view).y > 500
-
-        
-        
-        let point = sender.locationInView(self.view)
-        let percent = fmaxf(fminf(Float(point.y / view.frame.height), 0.99), 0.0)
-        
             switch (sender.state){
             case .Began:
-                self.usingGesture = true
-                
-                
-                
-    //            self.transitioningController.navigationController?.popViewControllerAnimated(true)
+                panStartY = sender.locationInView(self.view).y
             case .Changed:
-//                println(CGFloat(percent))
-//
-//                var filterImage = CIImage(image: headerBackgroundImage.image!)
-//                let filter = CIFilter(name: "CIGaussianBlur")
-//                filter.setDefaults()
-//                filter.setValue(filterImage, forKey: "inputImage")
-//
-//                filter.setValue(30, forKey: "inputRadius")
-//                var outputImage = filter.valueForKey("outputImage") as CIImage
-//                headerBackgroundImage.image = UIImage(CIImage: outputImage)
-
+                let location = sender.locationInView(self.view)
+                let pointDifference = location.y - panStartY!
                 
-                
-                let image = CIImage(CGImage: headerBackgroundImage.image!.CGImage)
-                let filter = CIFilter(name: "CIGaussianBlur")
-                filter.setDefaults()
-                filter.setValue(5, forKey: "inputRadius")
-                filter.setValue(image, forKey: kCIInputImageKey)
-                
-                let context = CIContext(options: nil)
-                let imageRef = context.createCGImage(filter.outputImage, fromRect: image.extent())
-                headerBackgroundImage.image = UIImage(CGImage: imageRef)
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                println(headerBackgroundImage.frame.width * 1.5)
-                
-            case .Ended, .Cancelled:
-                if percent > 0.5 {
-                    headerBackgroundImage.image = originalBannerImage!
-
-//                var cgImage = ciContext.createCGImage(ciFilter.outputImage, fromRect: ciImage.extent())
-
+                if pointDifference > 0 {
+                    let newRatio = (100.0 + pointDifference * 0.3)/100
+                    var newWidth =  newRatio * bannerStartFrame!.width
+                    var newHeight = newRatio * bannerStartFrame!.height
+                    var newXorigin =  bannerStartFrame!.origin.x - (newWidth - bannerStartFrame!.width)/2  // To keep it centered
                     
-                    
-                    
-                    
-                    
-                    
-    //                self.finishInteractiveTransition()
-                } else {
-    //                self.cancelInteractiveTransition()
+                    let newFrame = CGRect(x: newXorigin, y: bannerStartFrame!.origin.y, width: newWidth, height: newHeight)
+                    headerBackgroundImage.frame = newFrame
                 }
-//                headerBackgroundImage.frame = bannerStartFrame!
-                self.usingGesture = false
 
+            case .Ended, .Cancelled:
+                println("Done")
+                UIView.animateWithDuration(0.1, animations: {
+                    self.headerBackgroundImage.frame = self.bannerStartFrame!
+                })
             default:
                 NSLog("Unhandled state")
             }
-
-        
-        
     }
     
     
     
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileStatusCell") as ProfileStatusCell
+
+        
+        
+        cell.statusBody.text = tweets![indexPath.row].text
+        
+        UIView.animateWithDuration(0.5, animations: {
+            cell.statusBody.alpha = 1
+        })
+        return cell
     }
     
-
-
-
-
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let twts = tweets {
+            return twts.count
+        }
+        return 0
+    }
 }

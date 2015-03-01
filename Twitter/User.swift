@@ -16,6 +16,7 @@ let userDidLogoutNotification = "userDidLogoutNotification"
 
 class User: NSObject {
     var name: String?
+    var id: NSInteger?
     var screenname: String?
     var profileImageUrl: String?
     var tagline: String?
@@ -43,7 +44,7 @@ class User: NSObject {
         
         profileImageHigh = NSURL(string: profileImageUrl!.stringByReplacingOccurrencesOfString("_normal", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil))
         
-        
+        id = dictionary["id"] as? NSInteger
         
     
     }
