@@ -8,7 +8,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Twitter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="Twitter" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -778,7 +778,7 @@
         <!--Navigation Controller-->
         <scene sceneID="aSg-6n-wp2">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="R73-is-fxj" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="IndividualTweetNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="R73-is-fxj" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Prf-dm-nmR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
