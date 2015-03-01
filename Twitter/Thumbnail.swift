@@ -9,7 +9,6 @@
 import UIKit
 
 class Thumbnail: UIImageView {
-    
     required init(coder: NSCoder) {
         super.init(coder: coder)
         self.layer.cornerRadius = 4

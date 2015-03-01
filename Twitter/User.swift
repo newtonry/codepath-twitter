@@ -20,6 +20,13 @@ class User: NSObject {
     var profileImageUrl: String?
     var tagline: String?
     var dictionary: NSDictionary
+    var profileBackgroundUrl: NSURL?
+    var profileImageHigh: NSURL?
+    var tweetCount: NSInteger?
+    var followersCount: NSInteger?
+    var followingCount: NSInteger?
+    
+    
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary
@@ -27,6 +34,18 @@ class User: NSObject {
         screenname = dictionary["screen_name"] as? String
         profileImageUrl = dictionary["profile_image_url"] as? String
         tagline = dictionary["description"] as? String
+        let profileBackgroundUrlString = self.dictionary["profile_background_image_url"] as? String
+        profileBackgroundUrl =  NSURL(string: profileBackgroundUrlString!)
+
+        tweetCount = dictionary["statuses_count"] as? NSInteger
+        followersCount = dictionary["followers_count"] as? NSInteger
+        followingCount = dictionary["friends_count"] as? NSInteger
+        
+        profileImageHigh = NSURL(string: profileImageUrl!.stringByReplacingOccurrencesOfString("_normal", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil))
+        
+        
+        
+    
     }
     
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IndividualTweetViewController: UIViewController, TweetActionDelegate {
+class IndividualTweetViewController: BaseViewController, TweetActionDelegate, UIGestureRecognizerDelegate {
     var tweet: Tweet?
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var handleLabel: UILabel!
@@ -21,8 +21,6 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        navigationController?.navigationBar.barTintColor = UIColor(red: 0.333, green: 0.675, blue: 0.933, alpha: 1.0)
         
         if let tw = tweet {
             usernameLabel.text = tw.user!.name!
@@ -40,8 +38,23 @@ class IndividualTweetViewController: UIViewController, TweetActionDelegate {
             actionView.tweet = tw
             actionView.setButtons()
         }
+        setupThumbnailOnTap()
         
         actionView.delegate = self
+    }
+
+    func setupThumbnailOnTap() {
+        let recognizer = UITapGestureRecognizer(target: self, action: "switchToProfileView")
+        recognizer.delegate = self
+        thumbnailImageView.userInteractionEnabled = true
+        thumbnailImageView.addGestureRecognizer(recognizer)
+        
+    }
+    
+    func switchToProfileView() {
+        let userViewController = storyboard!.instantiateViewControllerWithIdentifier("UserViewController") as UserViewController
+        userViewController.user = tweet!.user
+        self.navigationController?.pushViewController(userViewController, animated: true)        
     }
     
     func onReply(tweet: Tweet) {

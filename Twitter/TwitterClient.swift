@@ -16,6 +16,7 @@ let favoriteEndpoint = "1.1/favorites/create.json"
 let homeTimelineEndpoint = "1.1/statuses/home_timeline.json"
 let retweetEndpoint = "1.1/statuses/retweet/"
 let oauthEndpoint = "https://api.twitter.com/oauth/authorize?oauth_token="
+let mentionsTimelineEndpoint = "/1.1/statuses/mentions_timeline.json"
 
 
 class TwitterClient: BDBOAuth1RequestOperationManager {
@@ -30,7 +31,6 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         return Static.instance
         
     }
-
     
     func loginWithCompletion(completion: (user: User?, error: NSError?) -> ()) {
         loginCompletion = completion
@@ -84,6 +84,33 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         )
     }
 
+    func mentionsTimelineEndpointWithCompletion(params: NSDictionary?, completion: (tweets:[Tweet]?, error: NSError?) -> ()) {
+        GET(mentionsTimelineEndpoint, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+
+            var tweets = Tweet.tweetsFromArray(response as [NSDictionary])
+            completion(tweets: tweets, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                completion(tweets: nil, error: error)
+                println(error.localizedDescription)
+            }
+        )
+    }
+
+    func getProfileBannerForUser(user: User, completion: (backgroundUrl: NSURL?, error: NSError?) -> ()) {
+        let params = ["screen_name": user.screenname!]
+        
+        GET("https://api.twitter.com/1.1/users/profile_banner.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            
+            let mobileRetinaUrlString = (((response["sizes"]) as NSDictionary)["mobile_retina"] as NSDictionary)["url"] as String
+            let mobileRetinaUrl = NSURL(string: mobileRetinaUrlString)
+            completion(backgroundUrl: mobileRetinaUrl, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                completion(backgroundUrl: nil, error: error)
+                println(error.localizedDescription)
+            }
+        )
+    }
+    
     func postTweetWithStatus(status: NSString!, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {
         let params = ["status": status]
         postToEnpointWithParams(statusEndpoint, params: params, completion: completion)
@@ -97,7 +124,6 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     func retweetTweet(tweet: Tweet, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {
         let endpoint = "\(retweetEndpoint)\(tweet.id!).json"
         postToEnpointWithParams(endpoint, params: nil, completion: completion)
-        
     }
     
     func postToEnpointWithParams(endpoint: NSString, params: NSDictionary?, completion: (response: AFHTTPRequestOperation?, error: NSError?) -> ()) {

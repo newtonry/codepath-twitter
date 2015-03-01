@@ -8,11 +8,13 @@
 
 import UIKit
 
-class TweetViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TweetActionDelegate {
+class TweetViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, TweetActionDelegate, UIGestureRecognizerDelegate {
     
-    var tweetsArray: [Tweet]?
+        
+    private var tweetsArray: [Tweet]?
+    var tweetGatheringMethod = TwitterClient.sharedInstance.homeTimelineWithCompletion
+    
     @IBOutlet weak var tableView: UITableView!
-//    @IBOutlet weak var actionView: TweetActionView!
     
     @IBAction func onLogout(sender: AnyObject) {
         User.currentUser?.logout()
@@ -21,14 +23,17 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.translucent = false
 
-        navigationController?.navigationBar.barTintColor = UIColor(red: 0.333, green: 0.675, blue: 0.933, alpha: 1.0)
         
-        TwitterClient.sharedInstance.homeTimelineWithCompletion(nil, completion: { (tweets, error) -> Void in
+        self.tweetGatheringMethod(nil, completion: { (tweets, error) -> Void in
             self.tweetsArray = tweets
             self.tableView.reloadData()
         })
-        
+        setupTableView()
+    }
+
+    func setupTableView() {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 100
         self.tableView.addPullToRefreshWithActionHandler(refreshTweets)
@@ -39,7 +44,7 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         let lastTweet = tweetsArray![0]
         let params = ["since_id": lastTweet.id!]
 
-        TwitterClient.sharedInstance.homeTimelineWithCompletion(params, completion: { (tweets, error) -> Void in
+        self.tweetGatheringMethod(params, completion: { (tweets, error) -> Void in
             println("Refreshing tweets")
 
             if let twts = tweets {
@@ -59,8 +64,7 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         let oldestTweet = tweetsArray![tweetsArray!.count - 1]  // This is making the assumption that the last tweet we receive is always the oldest, which may not always be the case
         let params = ["max_id": oldestTweet.id!]
         
-        
-        TwitterClient.sharedInstance.homeTimelineWithCompletion(params, completion: { (tweets: [Tweet]?, error: NSError?) -> Void in
+        self.tweetGatheringMethod(params, completion: { (tweets: [Tweet]?, error: NSError?) -> Void in
         println("Loading in more tweets")
             if let twts = tweets {
                 for tweet in twts {
@@ -85,7 +89,25 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         cell.fillFromTweet(tweet)
         cell.actionView.delegate = self  // I think this is an awful pattern, I regret doing this!
         cell.actionView.setButtons()
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: "switchToProfileView:")
+        recognizer.delegate = cell  // is there a better way to do this than get the tweet out of the cell
+        cell.thumbnail!.userInteractionEnabled = true
+        cell.thumbnail!.addGestureRecognizer(recognizer)
+  
         return cell
+    }
+    
+    func switchToProfileView(sender: UITapGestureRecognizer) {
+        let user = (sender.delegate! as TweetCell).tweet!.user!
+        let userViewController = storyboard!.instantiateViewControllerWithIdentifier("UserViewController") as UserViewController
+        userViewController.user = user
+        
+        
+        
+//        self.navigationController?.title = user.name!
+        
+        self.navigationController?.pushViewController(userViewController, animated: true)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -107,9 +129,7 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
         let newTweetNavigationController = storyboard!.instantiateViewControllerWithIdentifier("NewTweetNavigationController") as UINavigationController
         self.presentViewController(newTweetNavigationController, animated: true, completion: nil)
     }
-    
-    
-    
+
     func onRetweet(tweet: Tweet) {
         TwitterClient.sharedInstance.retweetTweet(tweet, completion: { (response: AFHTTPRequestOperation?, error: NSError?) -> Void in
             println("In retweet cb")
@@ -125,6 +145,10 @@ class TweetViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     
+    @IBAction func didPan(sender: UIPanGestureRecognizer) {
+        
+        
+    }
     
 //    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell") as TweetCell

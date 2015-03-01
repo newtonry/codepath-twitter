@@ -9,7 +9,7 @@
 import UIKit
 
 
-class NewTweetViewController: UIViewController, UITextViewDelegate {
+class NewTweetViewController: BaseViewController, UITextViewDelegate {
 
     @IBOutlet weak var userImage: Thumbnail!
     @IBOutlet weak var userName: UILabel!
@@ -19,7 +19,7 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.barTintColor = UIColor(red: 0.333, green: 0.675, blue: 0.933, alpha: 1.0)
+        self.navigationController?.navigationBar.translucent = false
 
         fillUserDetails()
         User.currentUser?.profileImageUrl

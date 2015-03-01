@@ -8,13 +8,14 @@
 
 import UIKit
 
-class TweetCell: UITableViewCell {
+class TweetCell: UITableViewCell, UIGestureRecognizerDelegate {
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var tweetLabel: UILabel!
     @IBOutlet weak var screennameLabel: UILabel!    
     @IBOutlet weak var thumbnail: Thumbnail!
     @IBOutlet weak var actionView: TweetActionView!
     @IBOutlet weak var createdAtLabel: UILabel!
+    var tweet: Tweet?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,6 +28,7 @@ class TweetCell: UITableViewCell {
     }
     
     func fillFromTweet(tweet: Tweet) {
+        self.tweet = tweet
         let thumbUrl = NSURL(string: tweet.user!.profileImageUrl!)
         tweetLabel.text = tweet.text
         userLabel.text = tweet.user!.name
