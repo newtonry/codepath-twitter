@@ -15,6 +15,7 @@ class UserViewController: BaseViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var headerBackgroundImage: UIImageView!
     @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var screenname: UILabel!
     
     @IBOutlet weak var followersCount: UILabel!
     @IBOutlet weak var followingCount: UILabel!
@@ -30,7 +31,6 @@ class UserViewController: BaseViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupTableView()
         setupUserDetails()
         setupPullRecognizer()
@@ -63,6 +63,7 @@ class UserViewController: BaseViewController, UITableViewDataSource, UITableView
         
         profileHeaderView.clipsToBounds = true
         headerBackgroundImage.clipsToBounds = true
+        screenname.text = "@\(user!.screenname!)"
         
         self.followingCount.text = "\(user!.followingCount!)"
         self.followersCount.text = "\(user!.followersCount!)"

@@ -45,35 +45,23 @@ class User: NSObject {
         profileImageHigh = NSURL(string: profileImageUrl!.stringByReplacingOccurrencesOfString("_normal", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil))
         
         id = dictionary["id"] as? NSInteger
-        
-    
     }
-    
-    
     
     func logout() {
         User.currentUser = nil
         TwitterClient.sharedInstance.requestSerializer.removeAccessToken()
         NSNotificationCenter.defaultCenter().postNotificationName(userDidLogoutNotification, object: nil)
     }
-    
-    
-    
+
     class var currentUser: User? {
         get {
-        
-        
             if _currentUser == nil {
                 var data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as? NSData
                 if data != nil {
                 var dictionary = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as NSDictionary
                     _currentUser = User(dictionary: dictionary)
-        
-                    
-        
                 }
             }
-        
             return _currentUser
         }
         
@@ -88,9 +76,5 @@ class User: NSObject {
             }
             NSUserDefaults.standardUserDefaults().synchronize()
         }
-        
     }
-    
-    
-    
 }

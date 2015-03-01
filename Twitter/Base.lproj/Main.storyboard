@@ -477,9 +477,7 @@
                             <constraint firstItem="j7j-6G-On9" firstAttribute="top" secondItem="eek-39-GXI" secondAttribute="bottom" constant="15" id="yZ5-IH-UY3"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="G9q-xU-4bT">
-                        <barButtonItem key="rightBarButtonItem" title="Temp user profile" id="2OH-at-fxO"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="G9q-xU-4bT"/>
                     <connections>
                         <outlet property="actionView" destination="j7j-6G-On9" id="2GJ-E9-r4O"/>
                         <outlet property="favoritesCountLabel" destination="KMf-8d-bA8" id="NnV-1c-4hV"/>
@@ -654,15 +652,24 @@
                                             <constraint firstAttribute="height" constant="120" id="qH7-SW-sAz"/>
                                         </constraints>
                                     </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mkE-IB-HQU">
+                                        <rect key="frame" x="0.0" y="148" width="320" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.33333334329999997" green="0.67450982329999998" blue="0.93333339689999995" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="centerX" secondItem="qAj-Ti-n8O" secondAttribute="centerX" id="4qT-PP-Qyl"/>
+                                    <constraint firstItem="mkE-IB-HQU" firstAttribute="leading" secondItem="Vsy-c8-p9N" secondAttribute="leading" id="Fpe-1F-xcT"/>
                                     <constraint firstAttribute="trailing" secondItem="7jg-g6-Bdl" secondAttribute="trailing" id="HgE-7s-na7"/>
                                     <constraint firstAttribute="bottom" secondItem="7jg-g6-Bdl" secondAttribute="bottom" id="Jha-H4-or8"/>
                                     <constraint firstItem="7jg-g6-Bdl" firstAttribute="top" secondItem="Vsy-c8-p9N" secondAttribute="top" id="gUM-Wz-UKU"/>
                                     <constraint firstAttribute="height" constant="200" id="gvb-PZ-KPG"/>
                                     <constraint firstAttribute="centerY" secondItem="qAj-Ti-n8O" secondAttribute="centerY" constant="20" id="hCH-au-aQU"/>
+                                    <constraint firstItem="mkE-IB-HQU" firstAttribute="top" secondItem="qAj-Ti-n8O" secondAttribute="bottom" constant="8" id="jDd-41-Eil"/>
+                                    <constraint firstAttribute="trailing" secondItem="mkE-IB-HQU" secondAttribute="trailing" id="v83-57-ega"/>
                                     <constraint firstItem="7jg-g6-Bdl" firstAttribute="leading" secondItem="Vsy-c8-p9N" secondAttribute="leading" id="wQE-Yp-nye"/>
                                 </constraints>
                             </view>
@@ -729,6 +736,7 @@
                         <outlet property="followingCount" destination="nMP-87-H0E" id="13T-E3-vmK"/>
                         <outlet property="headerBackgroundImage" destination="7jg-g6-Bdl" id="sVX-zL-esk"/>
                         <outlet property="profileHeaderView" destination="Vsy-c8-p9N" id="3Hc-bv-gv3"/>
+                        <outlet property="screenname" destination="mkE-IB-HQU" id="TBu-NS-m0L"/>
                         <outlet property="statsView" destination="HQJ-7u-TRa" id="mgV-iP-Rc7"/>
                         <outlet property="tableView" destination="8T5-ss-8uC" id="5ek-ip-2et"/>
                         <outlet property="tweetCount" destination="cWc-hD-xHM" id="dQH-vz-U3C"/>

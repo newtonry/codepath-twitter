@@ -1,4 +1,6 @@
 ## Twitter Part 2
+Time spent: 8 hrs
+
 
 ### Features
 
@@ -27,7 +29,7 @@
 
 ### Walkthrough
 
-![Video Walkthrough](...)
+![Video Walkthrough](twitter-2.gif)
 
 
 ## Twitter Part 1
