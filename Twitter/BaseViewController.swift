@@ -41,7 +41,7 @@ class BaseViewController: UIViewController {
     }
     
     func hideHamburgerMenu(sender: UIPanGestureRecognizer) {
-        let isPanningRight = sender.velocityInView(view).x < -500
+        let isPanningRight = sender.velocityInView(view).x < -1000
         
         if isPanningRight {
             UIView.animateWithDuration(0.15, animations: {
@@ -51,7 +51,7 @@ class BaseViewController: UIViewController {
     }
     
     func showHamburgerMenu(sender: UIPanGestureRecognizer) {
-        let isPanningLeft = sender.velocityInView(view).x > 500
+        let isPanningLeft = sender.velocityInView(view).x > 1000
 
         if isPanningLeft {
             menuViewController!.view.alpha = 1
