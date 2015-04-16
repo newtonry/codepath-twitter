@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreLocation
 
-class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
 
     struct MenuItemStruct {
         var title: String
@@ -18,7 +19,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var parentNavigationController: UINavigationController?
     
-    
+    let locationManager = CLLocationManager()
     var originalFrame: CGRect?
     var visibleFrame: CGRect?
     
@@ -38,7 +39,8 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         menuItems = [
             MenuItemStruct(title: "Profile", action: switchToProfileViewController, image: "profile.png"),
             MenuItemStruct(title: "Timeline", action: switchToHomeViewController, image: "home.png"),
-            MenuItemStruct(title: "Mentions", action: switchToMentionViewController, image: "mentions.png")
+            MenuItemStruct(title: "Mentions", action: switchToMentionViewController, image: "mentions.png"),
+            MenuItemStruct(title: "Tweet My Location", action: tweetCurrentLocation, image: "mentions.png")
         ]
   
         
@@ -59,6 +61,8 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         userName.text = User.currentUser!.name!
         userScreenname.text = "@\(User.currentUser!.screenname!)"
         
+        setupLocationManager()
+        
 
         // Do any additional setup after loading the view.
     }
@@ -66,6 +70,22 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // Location Manager
+    func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+    
+    func getCurrentLocationAsString() -> String {
+        if let location = locationManager.location {
+            return "\(location.coordinate.latitude),\(location.coordinate.longitude)"
+        } else {
+            return "37.7787151387515,-122.396358157657"
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -104,6 +124,12 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let vc = self.storyboard!.instantiateViewControllerWithIdentifier("TweetsViewController") as TweetViewController!
         // This is a pretty hacky way of doing it, it should really be its own class, but whatever works for now
         vc.tweetGatheringMethod = TwitterClient.sharedInstance.mentionsTimelineEndpointWithCompletion
+        self.parentNavigationController!.pushViewController(vc, animated: true)
+    }
+    
+    func tweetCurrentLocation() {
+        let vc = self.storyboard!.instantiateViewControllerWithIdentifier("NewTweetViewController") as NewTweetViewController!
+        vc.preText = "https://www.google.com/maps/place/\(getCurrentLocationAsString()) "
         self.parentNavigationController!.pushViewController(vc, animated: true)
     }
 

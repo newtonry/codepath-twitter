@@ -15,6 +15,7 @@ class NewTweetViewController: BaseViewController, UITextViewDelegate {
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var tweetTextView: UITextView!
     @IBOutlet weak var remainingLabel: UILabel!
+    var preText: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +27,10 @@ class NewTweetViewController: BaseViewController, UITextViewDelegate {
         tweetTextView.becomeFirstResponder()
         remainingLabel.text = "\(lettersLeft()) remaining"
         self.tweetTextView.delegate = self
+        
+        if let pt = preText {
+            self.tweetTextView.text = pt
+        }
     }
 
     func fillUserDetails() {
@@ -41,14 +46,15 @@ class NewTweetViewController: BaseViewController, UITextViewDelegate {
     }
     
     @IBAction func onCancel(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        let vc = self.storyboard!.instantiateViewControllerWithIdentifier("MainNavigationController") as UINavigationController!
+        self.presentViewController(vc, animated: true, completion: nil)
     }
-    
     
     @IBAction func onTweet(sender: AnyObject) {
         let status = tweetTextView.text
         TwitterClient.sharedInstance.postTweetWithStatus(status, completion: {(response: AFHTTPRequestOperation?, error: NSError?) -> Void in
-                self.dismissViewControllerAnimated(true, completion: nil)
+            let vc = self.storyboard!.instantiateViewControllerWithIdentifier("MainNavigationController") as UINavigationController!
+            self.presentViewController(vc, animated: true, completion: nil)
             }
         )
     }
